@@ -19,8 +19,6 @@ public class KitMerger {
         System.out.println("Reading Kit file: " + kitFile);
         try (BufferedReader kitReader = new BufferedReader(new FileReader(kitFile))) {
             String currentLine;
-            // Skip header
-            kitReader.readLine();
 
             while ((currentLine = kitReader.readLine()) != null) {
                 currentLine = currentLine.trim();
