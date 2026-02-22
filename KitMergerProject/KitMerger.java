@@ -29,7 +29,7 @@ public class KitMerger {
 
                 String[] splitLine = currentLine.split(",");
                 if (splitLine.length >= 2) {
-                    long pan = Long.parseLong(splitLine[0].trim());
+                    String pan = splitLine[0].trim();
                     String kitNumber = splitLine[1].trim();
                     kitRecords.add(new Kit(pan, kitNumber));
                 }
@@ -70,7 +70,7 @@ public class KitMerger {
                     cardDetail = splitLine;
                 }
 
-                long pan = Long.parseLong(cardDetail[0]);
+                String pan = cardDetail[0];
                 String sequenceNumber = cardDetail[1];
                 String fromDate = cardDetail[2];
                 String fromDay = cardDetail[3];
@@ -82,12 +82,7 @@ public class KitMerger {
                 String cardholderInitials = cardDetail[9];
                 String cardholderLastName = cardDetail[10];
                 String customerID = cardDetail[11];
-                int issuerReference = 0;
-                try {
-                    issuerReference = Integer.parseInt(cardDetail[12]);
-                } catch (NumberFormatException e) {
-                    // Safe fallback if format differs slightly
-                }
+                String issuerReference = cardDetail[12];
                 String companyName = cardDetail[13];
                 String cardType = cardDetail[14];
                 String cvv = cardDetail[15];
@@ -173,7 +168,7 @@ public class KitMerger {
         int matchedCount = 0;
         for (Card card : cardRecords) {
             for (Kit kit : kitRecords) {
-                if (card.pan == kit.pan) {
+                if (card.pan.equals(kit.pan)) {
                     card.cardholderName = kit.kitNumber;
                     matchedCount++;
                     break;

@@ -1,7 +1,7 @@
 //package Serge.Card.File.Reader;
 
 public class Card {
-    public long pan;
+    public String pan;
     public String sequenceNumber;
     public String fromDate;
     public String fromDay;
@@ -13,7 +13,7 @@ public class Card {
     public String cardholderInitials;
     public String cardholderLastName;
     public String customerID;
-    public int issuerReference;
+    public String issuerReference;
     public String companyName;
     public String cardType;
     public String cvv;
@@ -77,23 +77,23 @@ public class Card {
     public String iCSC5EMVContactless;
     public String iCSC5FallbackMagstripe;
 
-    public Card(long pan, String sequenceNumber, String fromDate, String fromDay, String expiryDate, String expiryDay,
-                String cardholderName, String cardholderTitle, String cardholderFirstName, String cardholderInitials,
-                String cardholderLastName, String customerID, int issuerReference, String companyName,
-                String cardType, String cvv, String cvv2, String generateSecurePIN, String securePINOffset,
-                String securePINBlock, String generateInsecurePIN, String insecurePINOffset, String insecurePINBlock,
-                String produceCard, String produceCardMailer, String producePINMailer, String track2Data,
-                String cardMailerAddress1, String cardMailerAddress2, String cardMailerAddressCity,
-                String cardMailerAddressRegion, String cardMailerAddressPostalCode, String pinMailerAddress1,
-                String pinMailerAddress2, String pinMailerAddressCity, String pinMailerAddressRegion,
-                String pinMailerAddressPostalCode, String cardCustomState, String securePINLength,
-                String insecurePINLength, String cardholderInfo, String branchCode, String dateIssued, String batchNumber,
-                String nationalID, String telephoneNr, String mobileNr, String fax, String emailAddress, String address1,
-                String address2, String city, String region, String postalCode, String country, String dateOfBirth,
-                String preferredLang, String extendedCard, String extendedCustomer, String defaultAccountType,
-                String account, String accountType, String accountProduct, String extendedAccount, String iCVV,
-                String iCVV2, String csc3, String scs4, String csc5, String icsc3, String icsc4, String icsc5,
-                String iCSC5EMVContact, String iCSC5EMVContactless, String iCSC5FallbackMagstripe) {
+    public Card(String pan, String sequenceNumber, String fromDate, String fromDay, String expiryDate, String expiryDay,
+            String cardholderName, String cardholderTitle, String cardholderFirstName, String cardholderInitials,
+            String cardholderLastName, String customerID, String issuerReference, String companyName,
+            String cardType, String cvv, String cvv2, String generateSecurePIN, String securePINOffset,
+            String securePINBlock, String generateInsecurePIN, String insecurePINOffset, String insecurePINBlock,
+            String produceCard, String produceCardMailer, String producePINMailer, String track2Data,
+            String cardMailerAddress1, String cardMailerAddress2, String cardMailerAddressCity,
+            String cardMailerAddressRegion, String cardMailerAddressPostalCode, String pinMailerAddress1,
+            String pinMailerAddress2, String pinMailerAddressCity, String pinMailerAddressRegion,
+            String pinMailerAddressPostalCode, String cardCustomState, String securePINLength,
+            String insecurePINLength, String cardholderInfo, String branchCode, String dateIssued, String batchNumber,
+            String nationalID, String telephoneNr, String mobileNr, String fax, String emailAddress, String address1,
+            String address2, String city, String region, String postalCode, String country, String dateOfBirth,
+            String preferredLang, String extendedCard, String extendedCustomer, String defaultAccountType,
+            String account, String accountType, String accountProduct, String extendedAccount, String iCVV,
+            String iCVV2, String csc3, String scs4, String csc5, String icsc3, String icsc4, String icsc5,
+            String iCSC5EMVContact, String iCSC5EMVContactless, String iCSC5FallbackMagstripe) {
         this.pan = pan;
         this.sequenceNumber = sequenceNumber;
         this.fromDate = fromDate;
