@@ -1,22 +1,90 @@
 import java.util.ArrayList;
 import java.io.*;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class KitMerger {
+    private static final Logger LOGGER = Logger.getLogger(KitMerger.class.getName());
+
+    private static String maskPan(String pan) {
+        if (pan == null || pan.length() < 10) {
+            return "******";
+        }
+        int len = pan.length();
+        StringBuilder masked = new StringBuilder();
+        masked.append(pan.substring(0, 6));
+        for (int i = 6; i < len - 4; i++) {
+            masked.append('*');
+        }
+        masked.append(pan.substring(len - 4));
+        return masked.toString();
+    }
+
     public static void main(String[] args) {
         if (args.length < 3) {
-            System.err.println("Usage: java KitMerger <kit_file> <card_file> <output_file>");
+            LOGGER.severe("Usage: java KitMerger <source_folder> <output_folder> <log_folder>");
             System.exit(1);
         }
 
-        String kitFile = args[0];
-        String cardFile = args[1];
-        String outputFile = args[2];
+        String sourceFolder = args[0].replace("\\", File.separator).replace("/", File.separator);
+        String outputFolder = args[1].replace("\\", File.separator).replace("/", File.separator);
+        String logFolder = args[2].replace("\\", File.separator).replace("/", File.separator);
+
+        File logDir = new File(logFolder);
+        if (!logDir.exists()) {
+            logDir.mkdirs();
+        }
+
+        try {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String logFileName = new File(logDir, "KitMerger_" + timeStamp + ".log").getAbsolutePath();
+            FileHandler fileHandler = new FileHandler(logFileName);
+            fileHandler.setFormatter(new SimpleFormatter());
+            LOGGER.addHandler(fileHandler);
+        } catch (IOException e) {
+            LOGGER.severe("Failed to initialize logger file handler: " + e.getMessage());
+        }
+
+        File sourceDir = new File(sourceFolder);
+        if (!sourceDir.isDirectory()) {
+            LOGGER.severe("Source folder is not a directory: " + sourceFolder);
+            System.exit(1);
+        }
+
+        File[] kitFiles = sourceDir.listFiles(
+                (dir, name) -> name.startsWith("pc_kit_number_to_be_issued_") && new File(dir, name).isFile());
+        if (kitFiles == null || kitFiles.length == 0) {
+            LOGGER.severe("Kit file with prefix 'pc_kit_number_to_be_issued_' not found in source folder.");
+            System.exit(1);
+        }
+        String kitFile = kitFiles[0].getAbsolutePath();
+
+        // Looking for prefix pc_cards_to_be_issued_ (and pc_cards_number_to_be_issued_
+        // for backwards compatibility in tests)
+        File[] cardFiles = sourceDir.listFiles((dir,
+                name) -> (name.startsWith("pc_cards_to_be_issued_") || name.startsWith("pc_cards_number_to_be_issued_"))
+                        && new File(dir, name).isFile());
+        if (cardFiles == null || cardFiles.length == 0) {
+            LOGGER.severe("Card file with prefix 'pc_cards_to_be_issued_' not found in source folder.");
+            System.exit(1);
+        }
+        String cardFile = cardFiles[0].getAbsolutePath();
+
+        File outDir = new File(outputFolder);
+        if (!outDir.exists()) {
+            outDir.mkdirs();
+        }
+        String outputFile = new File(outDir, "output.txt").getAbsolutePath();
 
         ArrayList<Kit> kitRecords = new ArrayList<>();
         ArrayList<Card> cardRecords = new ArrayList<>();
 
         // 1. Read Kit File
-        System.out.println("Reading Kit file: " + kitFile);
+        LOGGER.info("Reading Kit file: " + kitFile);
         try (BufferedReader kitReader = new BufferedReader(new FileReader(kitFile))) {
             String currentLine;
 
@@ -29,16 +97,17 @@ public class KitMerger {
                 if (splitLine.length >= 2) {
                     String pan = splitLine[0].trim();
                     String kitNumber = splitLine[1].trim();
+                    LOGGER.info("Loaded Kit record with PAN: " + maskPan(pan) + ", Kit Number: " + kitNumber);
                     kitRecords.add(new Kit(pan, kitNumber));
                 }
             }
-            System.out.println("Loaded " + kitRecords.size() + " kit records.");
+            LOGGER.info("Loaded " + kitRecords.size() + " kit records.");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // 2. Read Card File
-        System.out.println("Reading Card file: " + cardFile);
+        LOGGER.info("Reading Card file: " + cardFile);
         String header = "";
         String footer = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(cardFile))) {
@@ -156,27 +225,29 @@ public class KitMerger {
                         region, postalCode, country, dateOfBirth, preferredLang, extendedCard, extendedCustomer,
                         defaultAccountType, account, accountType, accountProduct, extendedAccount, iCVV, iCVV2, csc3,
                         scs4, csc5, icsc3, icsc4, icsc5, iCSC5EMVContact, iCSC5EMVContactless, iCSC5FallbackMagstripe));
+                LOGGER.info("Read Card record with PAN: " + maskPan(pan));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error reading file", e);
         }
 
         // 3. Process - merge kit numbers into matched cards
-        System.out.println("Merging records...");
+        LOGGER.info("Merging records...");
         int matchedCount = 0;
         for (Card card : cardRecords) {
             for (Kit kit : kitRecords) {
                 if (card.pan.equals(kit.pan)) {
+                    LOGGER.info("Match found for PAN: " + maskPan(card.pan) + " with Kit: " + kit.kitNumber);
                     card.cardholderName = kit.kitNumber;
                     matchedCount++;
                     break;
                 }
             }
         }
-        System.out.println("Matched " + matchedCount + " records.");
+        LOGGER.info("Matched " + matchedCount + " records.");
 
         // 4. Write Output
-        System.out.println("Writing output file: " + outputFile);
+        LOGGER.info("Writing output file: " + outputFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
             if (header != null) {
                 writer.write(header);
@@ -219,8 +290,8 @@ public class KitMerger {
                 writer.write(footer);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error writing output file", e);
         }
-        System.out.println("Done.");
+        LOGGER.info("Done.");
     }
 }

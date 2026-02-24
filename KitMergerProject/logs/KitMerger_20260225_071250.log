@@ -1,0 +1,28 @@
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Reading Kit file: /Users/serge/Documents/LocalDev/KitMergerProject/./pc_kit_number_to_be_issued_test.txt
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Loaded Kit record with PAN: 123456******3456, Kit Number: KIT-90210
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Loaded Kit record with PAN: 987654******7654, Kit Number: KIT-54321
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Loaded 2 kit records.
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Reading Card file: /Users/serge/Documents/LocalDev/KitMergerProject/./pc_cards_number_to_be_issued_test.txt
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Read Card record with PAN: 123456******3456
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Read Card record with PAN: 987654******7654
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Read Card record with PAN: 111122******4444
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Merging records...
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Match found for PAN: 123456******3456 with Kit: KIT-90210
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Match found for PAN: 987654******7654 with Kit: KIT-54321
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Matched 2 records.
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Writing output file: /Users/serge/Documents/LocalDev/KitMergerProject/./output.txt
+Feb 25, 2026 7:12:50 AM KitMerger main
+INFO: Done.
