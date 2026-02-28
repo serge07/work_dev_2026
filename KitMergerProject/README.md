@@ -16,7 +16,7 @@ This application was refactored based on the logic of the `SortedCard.java` proc
 *   **Core Logic (`KitMerger.java`)**:
     *   Loads both the input Kit file and Card file into respective `ArrayList<Kit>` and `ArrayList<Card>` structures in memory.
     *   Iterates through them to find matching PANs.
-    *   Replaces the 7th field (`cardholderName` at field index 6) of the matching **Card** record with the **Kit Number**.
+    *   Replaces the 36th field (`pinMailerAddressRegion` at field index 35) of the matching **Card** record with the **Kit Number**.
     *   Re-constructs the 75-column output exactly mimicking the input file format, preserving unmatched cards and header/trailer rows.
     *   Log instances mask Primary Account Numbers (PAN) matching the 6-asterisk-4 PCI DSS masking requirement.
 *   **Data Models**:
