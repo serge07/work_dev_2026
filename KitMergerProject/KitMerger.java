@@ -238,7 +238,7 @@ public class KitMerger {
             for (Kit kit : kitRecords) {
                 if (card.pan.equals(kit.pan)) {
                     LOGGER.info("Match found for PAN: " + maskPan(card.pan) + " with Kit: " + kit.kitNumber);
-                    card.cardholderName = kit.kitNumber;
+                    card.pinMailerAddressRegion = kit.kitNumber;
                     matchedCount++;
                     break;
                 }
